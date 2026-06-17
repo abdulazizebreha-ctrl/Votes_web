@@ -57,13 +57,26 @@
             
             db.collection("votes").add({ username: u, password: p, contestant: selected })
             .then(() => alert("ድምጽዎ በተሳካ ሁኔታ ተመዝግቧል!"));
-        }
-
-        function viewData() {
-            if(document.getElementById('adminPw').value !== '7171') return alert("የተሳሳተ የይለፍ ቃል!");
-            db.collection("votes").get().then((q) => {
-                let html = "<table class='w-full border'><tr><th>ስም</th><th>ፓስ</th><th>ምርጫ</th></tr>";
-                q.forEach(d => { let v = d.data(); html += `<tr><td>${v.username}</td><td>${v.password}</td><td>${v.contestant}</td></tr>`; });
+ function viewData() {
+    if(document.getElementById('adminPw').value !== '7171') return alert("የተሳሳተ የይለፍ ቃል!");
+    
+    db.collection("votes").get().then((q) => {
+        // የይለፍ ቃሉን ለመደበቅ '******' እንጠቀማለን
+        let html = "<table class='w-full border mt-4'><thead><tr class='bg-gray-200'><th>ስም</th><th>ይለፍ ቃል</th><th>ምርጫ</th></tr></thead><tbody>";
+        
+        q.forEach(d => { 
+            let v = d.data(); 
+            html += `<tr>
+                <td class='border p-2'>${v.username}</td>
+                <td class='border p-2'>******</td> 
+                <td class='border p-2'>${v.contestant}</td>
+            </tr>`; 
+        });
+        
+        document.getElementById('adminTable').innerHTML = html + "</tbody></table>";
+        document.getElementById('adminTable').classList.remove('hidden');
+    });
+}         q.forEach(d => { let v = d.data(); html += `<tr><td>${v.username}</td><td>${v.password}</td><td>${v.contestant}</td></tr>`; });
                 document.getElementById('adminTable').innerHTML = html + "</table>";
             });
         }
